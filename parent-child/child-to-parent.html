@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title></title>
+    </head>
+    <body>
+        <div id="app">
+            <blog-post @changed="update"></blog-post>
+            <h2>{{ app_title }}</h2>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script>
+            Vue.component("blog-post", {
+                data(){
+                    return {
+                        title: "I am from blog-post"
+                    }
+                },
+                template: `
+                    <div>
+                        <button @click="change">传值</button>
+                    </div>
+                `,
+                methods: {
+                    change(){
+                        this.$emit("changed", this.title)
+                    }
+                }
+            })
+
+            new Vue({
+                el: '#app',
+                data: {
+                    app_title: '',
+                },
+                methods: {
+                    update(str){
+                        this.app_title = str;
+                    }
+                }
+            })
+        </script>
+    </body>
+</html>

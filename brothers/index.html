@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title></title>
+    </head>
+    <body>
+        <div id="app">
+            <my-a></my-a>
+            <my-b></my-b>
+            <my-c></my-c>
+        </div>
+
+        <template id="a">
+            <div>
+                <h1>A组件</h1>
+                <h3>我的名字是: {{ name }}</h3>
+                <h3>我的年龄是: {{ age }}</h3>
+                <button @click="send">将数据发送给C组件</button>
+            </div>
+        </template>
+        <template id="b">
+            <div>
+                <h1>B组件</h1>
+                <h3>我的年龄是: {{ age }}</h3>
+                <button @click="send">将数据发送给C组件</button>
+            </div>
+        </template>
+        <template id="c">
+            <div>
+                <h3>C组件: {{ name }}, {{ age }}</h3>
+                <button @click="send">将数据发送给A组件</button>
+            </div>
+        </template>
+
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script>
+            var Event = new Vue();
+            var A = {
+                template: '#a',
+                data(){
+                    return {
+                        name: 'tom',
+                        age: ''
+                    }
+                },
+                methods: {
+                    send(){
+                        Event.$emit('data-a', this.name);
+                    }
+                },
+                mounted(){
+                    Event.$on('data-c', age => {
+                        this.age = age
+                    })
+                }
+            }
+            var B = {
+                template: '#b',
+                data(){
+                    return {
+                        age: 20
+                    }
+                },
+                methods: {
+                    send(){
+                        Event.$emit('data-b', this.age);
+                    }
+                }
+            }
+            var C = {
+                template: '#c',
+                data(){
+                    return {
+                        name: '',
+                        age: ''
+                    }
+                },
+                methods: {
+                    send(){
+                        Event.$emit('data-c', this.age)
+                    }
+                },
+                mounted(){
+                    Event.$on('data-a', name => {
+                        this.name = name;
+                    })
+                    Event.$on('data-b', age => {
+                        this.age = age;
+                    })
+                }
+            }
+
+            var app = new Vue({
+                el: '#app',
+                components: {
+                    'my-a': A,
+                    'my-b': B,
+                    'my-c': C,
+                }
+            })
+        </script>
+    </body>
+</html>
